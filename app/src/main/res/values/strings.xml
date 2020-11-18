@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">DumbHome</string>
+    <string name="edit_device_hint">Enter New Device Name</string>
+    <string name="dialog_cancel_text">Cancel</string>
+    <string name="dialog_save_text">Save</string>
+    <string name="refresh">Refresh</string>
+</resources>
