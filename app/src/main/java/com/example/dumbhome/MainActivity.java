@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView deviceListView;
     private RecyclerView.Adapter deviceAdapter;
+    private TextView spinnerText;
+    private ProgressBar spinner;
     private List<Device> devices;
 
     private void initializeDevices(int numDevices) {
@@ -43,7 +48,10 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.refresh_device_list) {
-            //process your onClick here
+            // TODO:  send Discovery Message
+            deviceListView.setVisibility(View.GONE);
+            spinner.setVisibility(View.VISIBLE);
+            spinnerText.setVisibility(View.VISIBLE);
             return true;
         }
 
@@ -69,5 +77,9 @@ public class MainActivity extends AppCompatActivity {
         deviceAdapter = new DeviceAdapter(devices, this);
         deviceListView.setAdapter(deviceAdapter);
 
+        spinner = findViewById(R.id.progress_bar);
+        spinnerText = findViewById(R.id.progress_bar_text);
+        spinner.setVisibility(View.GONE);
+        spinnerText.setVisibility(View.GONE);
     }
 }
