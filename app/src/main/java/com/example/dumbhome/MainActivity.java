@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,6 +18,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String EXTRA_MESSAGE = "";
     private RecyclerView deviceListView;
     private RecyclerView.Adapter deviceAdapter;
     private TextView spinnerText;
@@ -49,9 +51,11 @@ public class MainActivity extends AppCompatActivity {
 
         if (id == R.id.refresh_device_list) {
             // TODO:  send Discovery Message
-            deviceListView.setVisibility(View.GONE);
-            spinner.setVisibility(View.VISIBLE);
-            spinnerText.setVisibility(View.VISIBLE);
+            // TODO: Go to loading activity
+            Intent intent = new Intent(this, LoadingActivity.class);
+            intent.putExtra("EXTRA_SESSION_ID", "hello");
+            startActivity(intent);
+            finish();
             return true;
         }
 
@@ -76,10 +80,5 @@ public class MainActivity extends AppCompatActivity {
 
         deviceAdapter = new DeviceAdapter(devices, this);
         deviceListView.setAdapter(deviceAdapter);
-
-        spinner = findViewById(R.id.progress_bar);
-        spinnerText = findViewById(R.id.progress_bar_text);
-        spinner.setVisibility(View.GONE);
-        spinnerText.setVisibility(View.GONE);
     }
 }
