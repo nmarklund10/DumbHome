@@ -78,24 +78,24 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceHold
     // Private Functions
     private void sendToggleMessage(String ipAddress) {
         A2DToggleMessage message = new A2DToggleMessage(ipAddress);
-        D2AStatusMessage testMessage =
-                new D2AStatusMessage(TOGGLE_MSG_TYPE, true, true, "127.0.0.1");
         new Thread(new SendAndListen(message)).start();
-        new Thread(() -> {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            try {
-                DatagramSocket testClient = new DatagramSocket();
-                Log.d("DEBUG", "Client sending packet");
-                testClient.send(testMessage.getPacket());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }).start();
+//        D2AStatusMessage testMessage =
+//                new D2AStatusMessage(TOGGLE_MSG_TYPE, true, true, "127.0.0.1");
+//        new Thread(() -> {
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            try {
+//                DatagramSocket testClient = new DatagramSocket();
+//                Log.d("DEBUG", "Client sending packet");
+//                testClient.send(testMessage.getPacket());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }).start();
     }
 
     private void switchClickListener(Device device, SwitchMaterial deviceSwitch) {
@@ -103,8 +103,8 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceHold
         deviceSwitch.setChecked(device.getPowerState());
         if (device.getPowerState()) {
 //            sendToggleMessage(device.getIpAddress());
-            sendDiscoverMessage();
-//            sendNameMessage("Hello", device.getIpAddress());
+//            sendDiscoverMessage();
+//            sendNameMessage("Hello", "10.31.114.43");
         }
     }
 
