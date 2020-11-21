@@ -10,32 +10,14 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String EXTRA_MESSAGE = "";
     private RecyclerView deviceListView;
-    private RecyclerView.Adapter deviceAdapter;
-    private TextView spinnerText;
-    private ProgressBar spinner;
-    private List<Device> devices;
-
-    private void initializeDevices(int numDevices) {
-        devices = new ArrayList<>();
-        for(int i = 0; i < numDevices; i++){
-            Device newDevice = new Device(
-                    "127.0.0.1",
-                    "00:00:00:00:00",
-                    i
-            );
-            devices.add(newDevice);
-        }
-    }
+    public DeviceAdapter deviceAdapter;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -44,21 +26,19 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    private void goToLoadingActivity() {
+        Intent intent = new Intent(this, LoadingActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.refresh_device_list) {
-            // TODO:  send Discovery Message
-            // TODO: Go to loading activity
-            Intent intent = new Intent(this, LoadingActivity.class);
-            intent.putExtra("EXTRA_SESSION_ID", "hello");
-            startActivity(intent);
-            finish();
+        if (item.getItemId() == R.id.refresh_device_list) {
+            goToLoadingActivity();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -70,15 +50,17 @@ public class MainActivity extends AppCompatActivity {
         Toolbar dumbHomeToolbar = findViewById(R.id.dumb_home_toolbar);
         setSupportActionBar(dumbHomeToolbar);
 
+        ArrayList<Device> devices = DeviceListManager.getInstance().getDeviceList();
+        TextView deviceNotFound = findViewById(R.id.device_not_found);
+        if (devices.size() != 0) {
+            deviceNotFound.setVisibility(View.GONE);
+        }
+        deviceAdapter = new DeviceAdapter(devices, this);
         deviceListView = findViewById(R.id.device_list);
+        deviceListView.setAdapter(deviceAdapter);
         // Recycler View maintains height when items are added or removed from view
-        deviceListView. setHasFixedSize(true);
+        deviceListView.setHasFixedSize(true);
         // Have devices displayed in a list format
         deviceListView.setLayoutManager(new LinearLayoutManager(this));
-
-        initializeDevices(20);
-
-        deviceAdapter = new DeviceAdapter(devices, this);
-        deviceListView.setAdapter(deviceAdapter);
     }
 }

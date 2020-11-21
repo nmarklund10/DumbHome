@@ -5,4 +5,5 @@
     <string name="dialog_save_text">Save</string>
     <string name="refresh">Refresh</string>
     <string name="progress_bar_text">Refreshing Device List</string>
+    <string name="no_devices_message">No devices found.\nTry refreshing the list again!</string>
 </resources>
