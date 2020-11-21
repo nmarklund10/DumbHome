@@ -1,6 +1,7 @@
 package com.example.dumbhome;
 
 import java.util.Locale;
+import org.json.*;
 
 public class Device {
     private String displayName;
@@ -10,20 +11,14 @@ public class Device {
     private final int position;
 
     // Constructor
-    public Device(String aDisplayName, String aIpAddress, String aMacAddress, int aPosition) {
+    public Device(String aDisplayName, String aIpAddress, String aMacAddress, boolean aPowerState, int aPosition) {
+        if (aDisplayName == null) {
+            aDisplayName = "Device " + (aPosition + 1);
+        }
         this.displayName = aDisplayName;
         this.ipAddress = aIpAddress;
         this.macAddress = aMacAddress;
-        this.powerState = false;
-        this.position = aPosition;
-    }
-
-    // If Device does not have name assigned
-    public Device(String aIpAddress, String aMacAddress, int aPosition) {
-        this.displayName = "Device " + (aPosition + 1);
-        this.ipAddress = aIpAddress;
-        this.macAddress = aMacAddress;
-        this.powerState = false;
+        this.powerState = aPowerState;
         this.position = aPosition;
     }
 
