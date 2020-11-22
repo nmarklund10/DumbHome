@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -36,8 +37,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here.
         if (item.getItemId() == R.id.refresh_device_list) {
-            goToLoadingActivity();
-            return true;
+            if (!DeviceListManager.getInstance().isListening()) {
+                goToLoadingActivity();
+            }
+            else {
+                Toast.makeText(
+                        this, "Request in progress, try again later!", Toast.LENGTH_LONG
+                ).show();
+            }
         }
         return super.onOptionsItemSelected(item);
     }

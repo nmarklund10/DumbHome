@@ -3,11 +3,16 @@ package com.example.dumbhome;
 import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
+import com.example.dumbhome.messages.D2AStatusMessage;
 import com.example.dumbhome.messages.Message;
 import com.example.dumbhome.messages.MessageUtils;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.io.IOException;
+import java.net.BindException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.SocketException;
@@ -25,12 +30,21 @@ public class SendAndListen implements Runnable {
     private final int RECV_SIZE = 4096;
     private final int TIMEOUT = 2000;
     private byte[] receiverBuffer = new byte[RECV_SIZE];
+    private View view;
     Activity currentActivity;
     DatagramSocket serverSocket;
+    Device device;
 
     public SendAndListen(Message aMessage, Activity aActivity) {
         this.message = aMessage;
         this.currentActivity = aActivity;
+    }
+
+    public SendAndListen(Message aMessage, Activity aActivity, int deviceIndex, View aView) {
+        this.message = aMessage;
+        this.currentActivity = aActivity;
+        this.view = aView;
+        this.device = DeviceListManager.getInstance().getDeviceList().get(deviceIndex);
     }
 
     private boolean listenForResponse() throws IOException {
@@ -40,16 +54,28 @@ public class SendAndListen implements Runnable {
         serverSocket.receive(receivedPacket);
         if (message.msgType == DISCOVER_MSG_TYPE) {
             MessageUtils.handleIdentityMessage(receivedPacket);
-
         }
         else if (message.msgType == NAME_MSG_TYPE || message.msgType == TOGGLE_MSG_TYPE) {
-            MessageUtils.handleStatusMessage(receivedPacket, message.msgType);
+            D2AStatusMessage response = MessageUtils.handleStatusMessage(receivedPacket, message.msgType);
             serverSocket.close();
             if (message.msgType == NAME_MSG_TYPE) {
                 // TODO: update name on list
             }
             else if (message.msgType == TOGGLE_MSG_TYPE) {
-                // TODO: update switch
+                currentActivity.runOnUiThread(() -> {
+                    if (response != null) {
+                        device.setPowerState(response.relayOn);
+                    }
+                    else {
+                        Toast.makeText(
+                                currentActivity.getApplicationContext(),
+                                "Toggle message not accepted!", Toast.LENGTH_LONG
+                        ).show();
+                    }
+                    SwitchMaterial deviceSwitch = (SwitchMaterial) this.view;
+                    deviceSwitch.setChecked(device.getPowerState());
+                    view.setEnabled(true);
+                });
             }
             return false;
         }
@@ -63,7 +89,6 @@ public class SendAndListen implements Runnable {
         serverSocket.close();
         if (message.msgType == DISCOVER_MSG_TYPE) {
             currentActivity.runOnUiThread(() -> {
-                // TODO: go to Main Activity
                 Intent intent = new Intent(currentActivity, MainActivity.class);
                 currentActivity.startActivity(intent);
                 currentActivity.finish();
@@ -71,29 +96,47 @@ public class SendAndListen implements Runnable {
         }
         else {
             currentActivity.runOnUiThread(() -> {
-                // TODO: Display Error Message
+                Toast.makeText(
+                        currentActivity.getApplicationContext(),
+                        "Device did not respond!", Toast.LENGTH_LONG
+                ).show();
+                view.setEnabled(true);
             });
         }
     }
 
     @Override
     public void run() {
-        boolean isRunning = true;
         try {
+            DeviceListManager.getInstance().setListening(true);
             serverSocket = new DatagramSocket(listeningPort);
             // Send Message
             serverSocket.send(message.getPacket());
-            while (isRunning) {
+            while (DeviceListManager.getInstance().isListening()) {
                 try {
-                    isRunning = listenForResponse();
-                } catch (SocketTimeoutException e) {
+                    DeviceListManager.getInstance().setListening(listenForResponse());
+                }
+                catch (SocketTimeoutException e) {
                     handleTimeout();
-                    isRunning = false;
+                    DeviceListManager.getInstance().setListening(false);
                 }
             }
-        } catch (SocketException | UnknownHostException e) {
+        }
+        catch (BindException e) {
+            currentActivity.runOnUiThread(() -> {
+                Toast.makeText(
+                        currentActivity.getApplicationContext(),
+                        "Request in progress, try again later!", Toast.LENGTH_LONG
+                ).show();
+                if (view != null) {
+                    view.setEnabled(true);
+                }
+            });
+        }
+        catch (SocketException | UnknownHostException e) {
             Log.e("Socket Open:", "Error:", e);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }

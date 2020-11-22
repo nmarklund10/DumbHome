@@ -23,9 +23,19 @@ public class DeviceListManager {
     }
 
     private ArrayList<Device> deviceList;
+    private boolean listening;
 
     public DeviceListManager() {
         deviceList = new ArrayList<>();
+        listening = false;
+    }
+
+    public synchronized boolean isListening() {
+        return listening;
+    }
+
+    public synchronized void setListening(boolean aIsListening) {
+        listening = aIsListening;
     }
 
     public ArrayList<Device> getDeviceList() {

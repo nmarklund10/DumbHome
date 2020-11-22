@@ -15,16 +15,16 @@ import java.util.Locale;
 public class EditDeviceDialog {
 
     private final AlertDialog editDeviceDialog;
+    private final Device device;
 
     private View getEditDeviceDialogView(Context context) {
         ViewGroup viewGroup = ((Activity) context).findViewById(android.R.id.content);
-        View dialogView =  LayoutInflater.from(context).inflate(
+        return LayoutInflater.from(context).inflate(
                 R.layout.edit_device_dialog, viewGroup, false
         );
-        return dialogView;
     }
 
-    private void setEditDeviceInfo(View dialogView, Device device) {
+    private void setEditDeviceInfo(View dialogView) {
         TextView heading = dialogView.findViewById(R.id.dialog_heading);
         String headingText = String.format(
                 Locale.ENGLISH,
@@ -38,7 +38,7 @@ public class EditDeviceDialog {
     }
 
     private void setEditDeviceListeners(View dialogView, AlertDialog editDeviceDialog,
-                                        Device device, TextView deviceNameView) {
+                                        TextView deviceNameView) {
         dialogView.findViewById(R.id.dialog_save).setOnClickListener(view -> {
             EditText editDeviceField = dialogView.findViewById(R.id.edit_device_field);
             String newDeviceName = editDeviceField.getText().toString();
@@ -51,13 +51,14 @@ public class EditDeviceDialog {
         });
     }
 
-    public EditDeviceDialog(Context context, Device device, TextView deviceNameView) {
+    public EditDeviceDialog(Context context, int deviceIndex, TextView deviceNameView) {
         View dialogView = getEditDeviceDialogView(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setView(dialogView);
         this.editDeviceDialog = builder.create();
-        setEditDeviceInfo(dialogView, device);
-        setEditDeviceListeners(dialogView, editDeviceDialog, device, deviceNameView);
+        this.device = DeviceListManager.getInstance().getDeviceList().get(deviceIndex);
+        setEditDeviceInfo(dialogView);
+        setEditDeviceListeners(dialogView, editDeviceDialog, deviceNameView);
     }
 
     public void show() {
