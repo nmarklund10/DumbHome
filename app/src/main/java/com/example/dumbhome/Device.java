@@ -43,8 +43,8 @@ public class Device {
     }
 
     // Setters
-    public void togglePowerState() {
-        powerState = !powerState;
+    public void setPowerState(boolean aPowerState) {
+        powerState = aPowerState;
     }
     public void setDisplayName(String newDisplayName) {
         displayName = newDisplayName;
