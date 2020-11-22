@@ -1,7 +1,7 @@
 package com.example.dumbhome;
 
+import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.dumbhome.messages.MessageUtils;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
@@ -20,15 +21,15 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceHold
     private final ArrayList<Device> deviceList;
     private final Context context;
 
-    private void switchClickListener(Device device, SwitchMaterial deviceSwitch) {
-        // TODO send Toggle
-        device.togglePowerState();
-        deviceSwitch.setChecked(device.getPowerState());
+    private void switchClickListener(int deviceIndex, SwitchMaterial deviceSwitch) {
+        deviceSwitch.setEnabled(false);
+        deviceSwitch.setChecked(!deviceSwitch.isChecked());
+        MessageUtils.sendToggleMessage((Activity)context, deviceIndex, deviceSwitch);
     }
 
-
-    private void textViewListener(Device device, TextView deviceNameView) {
-        EditDeviceDialog dialog = new EditDeviceDialog(context, device, deviceNameView);
+    private void textViewListener(int deviceIndex, TextView deviceNameView) {
+        // TODO
+        EditDeviceDialog dialog = new EditDeviceDialog(context, deviceIndex, deviceNameView);
         dialog.show();
     }
 
@@ -53,12 +54,11 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceHold
 
         holder.deviceNameView.setText(device.getDisplayName());
         holder.deviceNameView.setOnClickListener(view -> {
-            textViewListener(device, holder.deviceNameView);
+            textViewListener(position, holder.deviceNameView);
         });
-
         holder.deviceSwitch.setChecked(device.getPowerState());
         holder.deviceSwitch.setOnClickListener(view -> {
-            switchClickListener(device, holder.deviceSwitch);
+            switchClickListener(position, holder.deviceSwitch);
         });
 
     }
