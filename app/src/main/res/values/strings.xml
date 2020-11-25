@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DumbHome</string>
     <string name="edit_device_hint">Enter New Device Name</string>
@@ -6,4 +7,5 @@
     <string name="refresh">Refresh</string>
     <string name="progress_bar_text">Refreshing Device List</string>
     <string name="no_devices_message">No devices found.\nTry refreshing the list again!</string>
+    <string name="edit_device_placeholder_text">Edit Device 1\n(00:00:00:00:00:00)</string>
 </resources>
