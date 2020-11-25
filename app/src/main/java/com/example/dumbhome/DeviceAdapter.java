@@ -28,7 +28,6 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceHold
     }
 
     private void textViewListener(int deviceIndex, TextView deviceNameView) {
-        // TODO
         EditDeviceDialog dialog = new EditDeviceDialog(context, deviceIndex, deviceNameView);
         dialog.show();
     }
