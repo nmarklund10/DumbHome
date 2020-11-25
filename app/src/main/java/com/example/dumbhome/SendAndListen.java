@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dumbhome.messages.A2DNameMessage;
 import com.example.dumbhome.messages.D2AStatusMessage;
 import com.example.dumbhome.messages.Message;
 import com.example.dumbhome.messages.MessageUtils;
@@ -31,20 +33,64 @@ public class SendAndListen implements Runnable {
     private final int TIMEOUT = 2000;
     private byte[] receiverBuffer = new byte[RECV_SIZE];
     private View view;
-    Activity currentActivity;
-    DatagramSocket serverSocket;
-    Device device;
+    private EditDeviceDialog editDeviceDialog;
+    private final Activity currentActivity;
+    private DatagramSocket serverSocket;
+    private Device device;
 
     public SendAndListen(Message aMessage, Activity aActivity) {
         this.message = aMessage;
         this.currentActivity = aActivity;
     }
 
-    public SendAndListen(Message aMessage, Activity aActivity, int deviceIndex, View aView) {
+    public SendAndListen(Message aMessage, Activity aActivity, int deviceIndex, View pView) {
         this.message = aMessage;
         this.currentActivity = aActivity;
-        this.view = aView;
+        this.view = pView;
         this.device = DeviceListManager.getInstance().getDeviceList().get(deviceIndex);
+    }
+
+    public SendAndListen(Message aMessage, EditDeviceDialog editDeviceDialog) {
+        this.message = aMessage;
+        this.currentActivity = editDeviceDialog.getCurrentActivity();
+        this.device = editDeviceDialog.getDevice();
+        this.editDeviceDialog = editDeviceDialog;
+    }
+
+    private void handleNameResponse(D2AStatusMessage response) {
+        currentActivity.runOnUiThread(() -> {
+            if (response != null) {
+                TextView deviceNameView = editDeviceDialog.getDeviceNameView();
+                String newDeviceName = ((A2DNameMessage)message).name;
+                device.setDisplayName(newDeviceName);
+                deviceNameView.setText(newDeviceName);
+            }
+            else {
+                Toast.makeText(
+                        currentActivity.getApplicationContext(),
+                        "Name message not accepted!", Toast.LENGTH_LONG
+                ).show();
+            }
+            editDeviceDialog.showLoading(false);
+            editDeviceDialog.dismiss();
+        });
+    }
+
+    private void handleToggleRespone(D2AStatusMessage response) {
+        currentActivity.runOnUiThread(() -> {
+            if (response != null) {
+                device.setPowerState(response.relayOn);
+            }
+            else {
+                Toast.makeText(
+                        currentActivity.getApplicationContext(),
+                        "Toggle message not accepted!", Toast.LENGTH_LONG
+                ).show();
+            }
+            SwitchMaterial deviceSwitch = (SwitchMaterial) this.view;
+            deviceSwitch.setChecked(device.getPowerState());
+            deviceSwitch.setEnabled(true);
+        });
     }
 
     private boolean listenForResponse() throws IOException {
@@ -59,23 +105,10 @@ public class SendAndListen implements Runnable {
             D2AStatusMessage response = MessageUtils.handleStatusMessage(receivedPacket, message.msgType);
             serverSocket.close();
             if (message.msgType == NAME_MSG_TYPE) {
-                // TODO: update name on list
+                handleNameResponse(response);
             }
             else if (message.msgType == TOGGLE_MSG_TYPE) {
-                currentActivity.runOnUiThread(() -> {
-                    if (response != null) {
-                        device.setPowerState(response.relayOn);
-                    }
-                    else {
-                        Toast.makeText(
-                                currentActivity.getApplicationContext(),
-                                "Toggle message not accepted!", Toast.LENGTH_LONG
-                        ).show();
-                    }
-                    SwitchMaterial deviceSwitch = (SwitchMaterial) this.view;
-                    deviceSwitch.setChecked(device.getPowerState());
-                    view.setEnabled(true);
-                });
+                handleToggleRespone(response);
             }
             return false;
         }
@@ -100,7 +133,12 @@ public class SendAndListen implements Runnable {
                         currentActivity.getApplicationContext(),
                         "Device did not respond!", Toast.LENGTH_LONG
                 ).show();
-                view.setEnabled(true);
+                if (message.msgType == TOGGLE_MSG_TYPE) {
+                    view.setEnabled(true);
+                }
+                else {
+                    editDeviceDialog.showLoading(false);
+                }
             });
         }
     }
@@ -130,6 +168,9 @@ public class SendAndListen implements Runnable {
                 ).show();
                 if (view != null) {
                     view.setEnabled(true);
+                }
+                else {
+                    editDeviceDialog.showLoading(false);
                 }
             });
         }
