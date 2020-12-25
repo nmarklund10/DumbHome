@@ -6,7 +6,10 @@ import android.util.Log;
 import com.example.dumbhome.Device;
 import com.example.dumbhome.DeviceListManager;
 import com.example.dumbhome.EditDeviceDialog;
-import com.example.dumbhome.SendAndListen;
+import com.example.dumbhome.SendAndListen.SendAndListen;
+import com.example.dumbhome.SendAndListen.SendDiscoverAndListen;
+import com.example.dumbhome.SendAndListen.SendNameAndListen;
+import com.example.dumbhome.SendAndListen.SendToggleAndListen;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.io.IOException;
@@ -22,106 +25,102 @@ public class MessageUtils {
     private MessageUtils() {}
 
     public static void sendDiscoverMessage(Activity activity) {
-        A2DDiscoverMessage message = new A2DDiscoverMessage();
-        new Thread(new SendAndListen(message, activity)).start();
-//        D2AIdentityMessage testMessage =
-//                new D2AIdentityMessage(true, true, "Name", "10.31.114.42");
-//        new Thread(() -> {
-//            try {
-//                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                DatagramSocket testClient = new DatagramSocket();
-//                Log.d("DEBUG", "Client sending packet");
-//                testClient.send(testMessage.getPacket());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }).start();
-//        new Thread(() -> {
-//            try {
-//                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                DatagramSocket testClient = new DatagramSocket();
-//                Log.d("DEBUG", "Client sending packet");
-//                testClient.send(testMessage.getPacket());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }).start();
+        new Thread(new SendDiscoverAndListen(activity)).start();
+//        MessageUtils.sendTestDiscoverResponses();
     }
 
     public static void sendToggleMessage(Activity activity, int deviceIndex, SwitchMaterial deviceSwitch) {
-        String ipAddress = DeviceListManager.getInstance().getDeviceList().get(deviceIndex).getIpAddress();
-        A2DToggleMessage message = new A2DToggleMessage(ipAddress);
-        new Thread(new SendAndListen(message, activity, deviceIndex, deviceSwitch)).start();
-//        D2AStatusMessage testMessage =
-//                new D2AStatusMessage(TOGGLE_MSG_TYPE, true, false, "10.31.114.42");
-//        new Thread(() -> {
-//            try {
-//                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                DatagramSocket testClient = new DatagramSocket();
-//                Log.d("DEBUG", "Client sending packet");
-//                testClient.send(testMessage.getPacket());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }).start();
+        new Thread(new SendToggleAndListen(activity, deviceIndex, deviceSwitch)).start();
+//        MessageUtils.sendTestToggleResponses();
     }
 
     public static void sendNameMessage(String name, EditDeviceDialog editDeviceDialog) {
-        String ipAddress = editDeviceDialog.getDevice().getIpAddress();
-        A2DNameMessage message = new A2DNameMessage(name, ipAddress);
-        new Thread(new SendAndListen(message, editDeviceDialog)).start();
-//        D2AStatusMessage testMessage =
-//            new D2AStatusMessage(NAME_MSG_TYPE, true, true, "10.31.114.42");
-//        new Thread(() -> {
-//            try {
-//                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//            try {
-//                DatagramSocket testClient = new DatagramSocket();
-//                Log.d("DEBUG", "Client sending packet");
-//                testClient.send(testMessage.getPacket());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//
-//        }).start();
+        new Thread(new SendNameAndListen(name, editDeviceDialog)).start();
+//        MessageUtils.sendTestNameResponses();
     }
 
-    public static void handleIdentityMessage(DatagramPacket receivedPacket) {
-        D2AIdentityMessage response = D2AIdentityMessage.fromBytes(receivedPacket.getData());
-        if (response != null) {
-            InetAddress ipAddress = receivedPacket.getAddress();
-            Device newDevice = new Device(
-                response.name, ipAddress.toString().substring(1), "00:00:00:00:00:00",
-                response.relayState, DeviceListManager.getInstance().getDeviceList().size() + 1
-            );
-            DeviceListManager.getInstance().addDevice(newDevice);
-        }
-    }
-
-    public static D2AStatusMessage handleStatusMessage(DatagramPacket receivedPacket, int msgType) {
+    public static D2AStatusMessage parseStatusPacket(DatagramPacket receivedPacket, int msgType) {
         D2AStatusMessage response = D2AStatusMessage.fromBytes(receivedPacket.getData());
-        if (!response.lastMsgSuccess || response.lastMsgType != msgType) {
+        if (response != null && (!response.lastMsgSuccess || response.lastMsgType != msgType)) {
             return null;
         }
         return response;
     }
 
+    public static void sendTestDiscoverResponses() {
+        D2AIdentityMessage testMessage1 =
+                new D2AIdentityMessage(true, true, "Name 1", "10.31.114.42");
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                DatagramSocket testClient = new DatagramSocket();
+                Log.d("DEBUG", "Client sending packet");
+                testClient.send(testMessage1.getPacket());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+        D2AIdentityMessage testMessage2 =
+                new D2AIdentityMessage(true, true, "Name 2", "10.31.114.42");
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                DatagramSocket testClient = new DatagramSocket();
+                Log.d("DEBUG", "Client sending packet");
+                testClient.send(testMessage2.getPacket());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+    }
+
+    public static void sendTestToggleResponses() {
+        D2AStatusMessage testMessage =
+            new D2AStatusMessage(TOGGLE_MSG_TYPE, true, false, "10.31.114.42");
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                DatagramSocket testClient = new DatagramSocket();
+                Log.d("DEBUG", "Client sending packet");
+                testClient.send(testMessage.getPacket());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+    }
+
+    public static void sendTestNameResponses() {
+        D2AStatusMessage testMessage =
+            new D2AStatusMessage(NAME_MSG_TYPE, true, true, "10.31.114.42");
+        new Thread(() -> {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            try {
+                DatagramSocket testClient = new DatagramSocket();
+                Log.d("DEBUG", "Client sending packet");
+                testClient.send(testMessage.getPacket());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+    }
 }

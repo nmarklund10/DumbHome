@@ -5,6 +5,8 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.dumbhome.SendAndListen.SendAndListen;
+import com.example.dumbhome.SendAndListen.SendDiscoverAndListen;
 import com.example.dumbhome.messages.MessageUtils;
 
 public class LoadingActivity extends AppCompatActivity {
@@ -18,6 +20,5 @@ public class LoadingActivity extends AppCompatActivity {
         setSupportActionBar(dumbHomeToolbar);
 
         DeviceListManager.getInstance().clearDeviceList();
-        MessageUtils.sendDiscoverMessage(this);
     }
 }
