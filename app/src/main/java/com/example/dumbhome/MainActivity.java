@@ -13,6 +13,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.dumbhome.SendAndListen.SendDiscoverAndListen;
+import com.example.dumbhome.messages.MessageUtils;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,24 +30,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private void goToLoadingActivity() {
-        Intent intent = new Intent(this, LoadingActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here.
         if (item.getItemId() == R.id.refresh_device_list) {
-            if (!DeviceListManager.getInstance().isListening()) {
-                goToLoadingActivity();
-            }
-            else {
-                Toast.makeText(
-                        this, "Request in progress, try again later!", Toast.LENGTH_LONG
-                ).show();
-            }
+            MessageUtils.sendDiscoverMessage(this);
         }
         return super.onOptionsItemSelected(item);
     }
