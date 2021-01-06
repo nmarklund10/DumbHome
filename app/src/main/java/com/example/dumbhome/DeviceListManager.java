@@ -1,8 +1,21 @@
 package com.example.dumbhome;
 
+import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 
+import com.example.dumbhome.SendAndListen.SendDiscoverAndListen;
+import com.example.dumbhome.SendAndListen.SendNameAndListen;
+import com.example.dumbhome.SendAndListen.SendToggleAndListen;
+import com.google.android.material.switchmaterial.SwitchMaterial;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.util.ArrayList;
+
+import static com.example.dumbhome.messages.A2DNameMessage.NAME_MSG_TYPE;
+import static com.example.dumbhome.messages.A2DToggleMessage.TOGGLE_MSG_TYPE;
 
 public class DeviceListManager {
 
@@ -49,5 +62,4 @@ public class DeviceListManager {
     public void clearDeviceList() {
         deviceList = new ArrayList<>();
     }
-
 }

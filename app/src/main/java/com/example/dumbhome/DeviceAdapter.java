@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.dumbhome.messages.MessageUtils;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceHold
     private void switchClickListener(int deviceIndex, SwitchMaterial deviceSwitch) {
         deviceSwitch.setEnabled(false);
         deviceSwitch.setChecked(!deviceSwitch.isChecked());
-        MessageUtils.sendToggleMessage((Activity)context, deviceIndex, deviceSwitch);
+        DeviceListManager.MessageUtils.sendToggleMessage((Activity)context, deviceIndex, deviceSwitch);
     }
 
     private void textViewListener(int deviceIndex, TextView deviceNameView) {

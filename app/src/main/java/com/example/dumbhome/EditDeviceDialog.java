@@ -11,8 +11,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.dumbhome.messages.MessageUtils;
-
 import java.util.Locale;
 
 public class EditDeviceDialog {
@@ -53,7 +51,7 @@ public class EditDeviceDialog {
         }
         else {
             showLoading(true);
-            MessageUtils.sendNameMessage(newDeviceName, this);
+            DeviceListManager.MessageUtils.sendNameMessage(newDeviceName, this);
         }
     }
 

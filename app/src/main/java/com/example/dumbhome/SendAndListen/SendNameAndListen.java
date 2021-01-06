@@ -1,18 +1,16 @@
 package com.example.dumbhome.SendAndListen;
 
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.dumbhome.Device;
+import com.example.dumbhome.DeviceListManager;
 import com.example.dumbhome.EditDeviceDialog;
-import com.example.dumbhome.messages.A2DNameMessage;
-import com.example.dumbhome.messages.D2AStatusMessage;
-import com.example.dumbhome.messages.Message;
-import com.example.dumbhome.messages.MessageUtils;
+import dh_java.A2DNameMessage;
+import dh_java.D2AStatusMessage;
 
 import java.net.DatagramPacket;
 
-import static com.example.dumbhome.messages.A2DNameMessage.NAME_MSG_TYPE;
+import static dh_java.A2DNameMessage.NAME_MSG_TYPE;
 
 public class SendNameAndListen extends SendAndListen {
 
@@ -28,7 +26,7 @@ public class SendNameAndListen extends SendAndListen {
 
     @Override
     public boolean handleResponseMessage(DatagramPacket receivedPacket) {
-        D2AStatusMessage response = MessageUtils.parseStatusPacket(receivedPacket, NAME_MSG_TYPE);
+        D2AStatusMessage response = DeviceListManager.MessageUtils.parseStatusPacket(receivedPacket, NAME_MSG_TYPE);
         this.currentActivity.runOnUiThread(() -> {
             if (response != null) {
                 TextView deviceNameView = this.editDeviceDialog.getDeviceNameView();

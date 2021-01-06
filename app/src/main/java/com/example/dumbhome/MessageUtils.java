@@ -1,24 +1,21 @@
-package com.example.dumbhome.messages;
+package com.example.dumbhome;
 
 import android.app.Activity;
 import android.util.Log;
 
-import com.example.dumbhome.Device;
-import com.example.dumbhome.DeviceListManager;
-import com.example.dumbhome.EditDeviceDialog;
-import com.example.dumbhome.SendAndListen.SendAndListen;
 import com.example.dumbhome.SendAndListen.SendDiscoverAndListen;
 import com.example.dumbhome.SendAndListen.SendNameAndListen;
 import com.example.dumbhome.SendAndListen.SendToggleAndListen;
+import dh_java.D2AIdentityMessage;
+import dh_java.D2AStatusMessage;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 
-import static com.example.dumbhome.messages.A2DNameMessage.NAME_MSG_TYPE;
-import static com.example.dumbhome.messages.A2DToggleMessage.TOGGLE_MSG_TYPE;
+import static dh_java.A2DNameMessage.NAME_MSG_TYPE;
+import static dh_java.A2DToggleMessage.TOGGLE_MSG_TYPE;
 
 public class MessageUtils {
     // User should not make instance of this class

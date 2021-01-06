@@ -5,16 +5,11 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.dumbhome.SendAndListen.SendDiscoverAndListen;
-import com.example.dumbhome.messages.MessageUtils;
 
 import java.util.ArrayList;
 
@@ -34,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here.
         if (item.getItemId() == R.id.refresh_device_list) {
-            MessageUtils.sendDiscoverMessage(this);
+            DeviceListManager.MessageUtils.sendDiscoverMessage(this);
         }
         return super.onOptionsItemSelected(item);
     }
