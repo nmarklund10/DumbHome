@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here.
         if (item.getItemId() == R.id.refresh_device_list) {
-            DeviceListManager.MessageUtils.sendDiscoverMessage(this);
+            MessageUtils.sendDiscoverMessage(this);
         }
         return super.onOptionsItemSelected(item);
     }

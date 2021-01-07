@@ -23,7 +23,7 @@ public class DeviceAdapter extends RecyclerView.Adapter<DeviceAdapter.DeviceHold
     private void switchClickListener(int deviceIndex, SwitchMaterial deviceSwitch) {
         deviceSwitch.setEnabled(false);
         deviceSwitch.setChecked(!deviceSwitch.isChecked());
-        DeviceListManager.MessageUtils.sendToggleMessage((Activity)context, deviceIndex, deviceSwitch);
+        MessageUtils.sendToggleMessage((Activity)context, deviceIndex, deviceSwitch);
     }
 
     private void textViewListener(int deviceIndex, TextView deviceNameView) {

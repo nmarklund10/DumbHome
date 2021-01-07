@@ -1,6 +1,5 @@
 package com.example.dumbhome;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -51,7 +50,7 @@ public class EditDeviceDialog {
         }
         else {
             showLoading(true);
-            DeviceListManager.MessageUtils.sendNameMessage(newDeviceName, this);
+            MessageUtils.sendNameMessage(newDeviceName, this);
         }
     }
 

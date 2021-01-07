@@ -1,7 +1,6 @@
 package com.example.dumbhome;
 
 import java.util.Locale;
-import org.json.*;
 
 public class Device {
     private String displayName;
