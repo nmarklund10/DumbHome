@@ -20,23 +20,23 @@ import static dh_java.A2DToggleMessage.TOGGLE_MSG_TYPE;
 public class MessageUtils {
     // User should not make instance of this class
     private MessageUtils() {}
-//    public static final String phoneIP = "10.31.114.16";
-//    public static final String phoneIP = "10.31.114.13";
-    public static final String phoneIP = "107.194.138.53";
+
+    private static final String phoneIP = "107.194.138.53";
+    private static final boolean isTesting = true;
 
     public static void sendDiscoverMessage(Activity activity) {
         new Thread(new SendDiscoverAndListen(activity)).start();
-//        MessageUtils.sendTestDiscoverResponses();
+        if (isTesting) { MessageUtils.sendTestDiscoverResponses(); }
     }
 
     public static void sendToggleMessage(Activity activity, int deviceIndex, SwitchMaterial deviceSwitch) {
         new Thread(new SendToggleAndListen(activity, deviceIndex, deviceSwitch)).start();
-//        MessageUtils.sendTestToggleResponses();
+        if (isTesting) { MessageUtils.sendTestToggleResponses(); }
     }
 
     public static void sendNameMessage(String name, EditDeviceDialog editDeviceDialog) {
         new Thread(new SendNameAndListen(name, editDeviceDialog)).start();
-//        MessageUtils.sendTestNameResponses();
+        if (isTesting) { MessageUtils.sendTestNameResponses(); }
     }
 
     public static D2AStatusMessage parseStatusPacket(DatagramPacket receivedPacket, int msgType) {
