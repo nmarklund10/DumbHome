@@ -1,20 +1,18 @@
 package com.example.dumbhome.SendAndListen;
 
 import android.app.Activity;
-import android.view.View;
-import android.widget.Toast;
 
 import com.example.dumbhome.Device;
 import com.example.dumbhome.DeviceListManager;
-import com.example.dumbhome.messages.A2DToggleMessage;
-import com.example.dumbhome.messages.D2AStatusMessage;
-import com.example.dumbhome.messages.Message;
-import com.example.dumbhome.messages.MessageUtils;
+import dh_java.A2DToggleMessage;
+import dh_java.D2AStatusMessage;
+
+import com.example.dumbhome.MessageUtils;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.net.DatagramPacket;
 
-import static com.example.dumbhome.messages.A2DToggleMessage.TOGGLE_MSG_TYPE;
+import static dh_java.A2DToggleMessage.TOGGLE_MSG_TYPE;
 
 public class SendToggleAndListen extends SendAndListen{
 

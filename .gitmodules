@@ -1,0 +1,3 @@
+[submodule "DHMessages"]
+	path = DHMessages
+	url = https://github.com/pyraetos/DHMessages

@@ -1,6 +1,5 @@
 package com.example.dumbhome;
 
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -10,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.example.dumbhome.messages.MessageUtils;
 
 import java.util.Locale;
 

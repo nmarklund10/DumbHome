@@ -1,20 +1,11 @@
 package com.example.dumbhome.SendAndListen;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dumbhome.Device;
 import com.example.dumbhome.DeviceListManager;
-import com.example.dumbhome.EditDeviceDialog;
-import com.example.dumbhome.MainActivity;
-import com.example.dumbhome.messages.A2DNameMessage;
-import com.example.dumbhome.messages.D2AStatusMessage;
-import com.example.dumbhome.messages.Message;
-import com.google.android.material.switchmaterial.SwitchMaterial;
+import dh_java.Message;
 
 import java.io.IOException;
 import java.net.BindException;
@@ -23,9 +14,6 @@ import java.net.DatagramSocket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
-
-import static com.example.dumbhome.messages.A2DDiscoverMessage.DISCOVER_MSG_TYPE;
-import static com.example.dumbhome.messages.A2DToggleMessage.TOGGLE_MSG_TYPE;
 
 public abstract class SendAndListen implements Runnable {
 
@@ -71,6 +59,7 @@ public abstract class SendAndListen implements Runnable {
                 try {
                     DeviceListManager.getInstance().setListening(listenForResponse());
                 } catch (SocketTimeoutException e) {
+                    DeviceListManager.getInstance().setListening(false);
                     this.currentActivity.runOnUiThread(this::handleTimeout);
                 }
             }

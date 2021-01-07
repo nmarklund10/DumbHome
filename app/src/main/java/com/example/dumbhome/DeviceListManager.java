@@ -49,5 +49,4 @@ public class DeviceListManager {
     public void clearDeviceList() {
         deviceList = new ArrayList<>();
     }
-
 }

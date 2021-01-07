@@ -1,28 +1,28 @@
-package com.example.dumbhome.messages;
+package com.example.dumbhome;
 
 import android.app.Activity;
 import android.util.Log;
 
-import com.example.dumbhome.Device;
-import com.example.dumbhome.DeviceListManager;
-import com.example.dumbhome.EditDeviceDialog;
-import com.example.dumbhome.SendAndListen.SendAndListen;
 import com.example.dumbhome.SendAndListen.SendDiscoverAndListen;
 import com.example.dumbhome.SendAndListen.SendNameAndListen;
 import com.example.dumbhome.SendAndListen.SendToggleAndListen;
+import dh_java.D2AIdentityMessage;
+import dh_java.D2AStatusMessage;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 
-import static com.example.dumbhome.messages.A2DNameMessage.NAME_MSG_TYPE;
-import static com.example.dumbhome.messages.A2DToggleMessage.TOGGLE_MSG_TYPE;
+import static dh_java.A2DNameMessage.NAME_MSG_TYPE;
+import static dh_java.A2DToggleMessage.TOGGLE_MSG_TYPE;
 
 public class MessageUtils {
     // User should not make instance of this class
     private MessageUtils() {}
+//    public static final String phoneIP = "10.31.114.16";
+//    public static final String phoneIP = "10.31.114.13";
+    public static final String phoneIP = "107.194.138.53";
 
     public static void sendDiscoverMessage(Activity activity) {
         new Thread(new SendDiscoverAndListen(activity)).start();
@@ -49,7 +49,7 @@ public class MessageUtils {
 
     public static void sendTestDiscoverResponses() {
         D2AIdentityMessage testMessage1 =
-                new D2AIdentityMessage(true, true, "Name 1", "10.31.114.42");
+                new D2AIdentityMessage(true, true, "Name 1", phoneIP);
         new Thread(() -> {
             try {
                 Thread.sleep(500);
@@ -60,13 +60,14 @@ public class MessageUtils {
                 DatagramSocket testClient = new DatagramSocket();
                 Log.d("DEBUG", "Client sending packet");
                 testClient.send(testMessage1.getPacket());
+                Log.d("DEBUG", "Client sent packet");
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }).start();
         D2AIdentityMessage testMessage2 =
-                new D2AIdentityMessage(true, true, "Name 2", "10.31.114.42");
+                new D2AIdentityMessage(true, true, "Name 2", phoneIP);
         new Thread(() -> {
             try {
                 Thread.sleep(500);
@@ -86,7 +87,7 @@ public class MessageUtils {
 
     public static void sendTestToggleResponses() {
         D2AStatusMessage testMessage =
-            new D2AStatusMessage(TOGGLE_MSG_TYPE, true, false, "10.31.114.42");
+            new D2AStatusMessage(TOGGLE_MSG_TYPE, true, false, phoneIP);
         new Thread(() -> {
             try {
                 Thread.sleep(500);
@@ -106,7 +107,7 @@ public class MessageUtils {
 
     public static void sendTestNameResponses() {
         D2AStatusMessage testMessage =
-            new D2AStatusMessage(NAME_MSG_TYPE, true, true, "10.31.114.42");
+            new D2AStatusMessage(NAME_MSG_TYPE, true, true, phoneIP);
         new Thread(() -> {
             try {
                 Thread.sleep(500);
