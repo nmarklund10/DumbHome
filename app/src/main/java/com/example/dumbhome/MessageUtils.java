@@ -21,7 +21,7 @@ public class MessageUtils {
     // User should not make instance of this class
     private MessageUtils() {}
 
-    private static final String phoneIP = "107.194.138.53";
+    private static final String phoneIP = "10.31.114.13";
     private static final boolean isTesting = true;
 
     public static void sendDiscoverMessage(Activity activity) {
