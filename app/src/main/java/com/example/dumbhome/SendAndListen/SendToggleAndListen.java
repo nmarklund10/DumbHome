@@ -6,6 +6,8 @@ import com.example.dumbhome.Device;
 import com.example.dumbhome.DeviceListManager;
 import dh_java.A2DToggleMessage;
 import dh_java.D2AStatusMessage;
+
+import com.example.dumbhome.MessageUtils;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.net.DatagramPacket;
@@ -28,7 +30,7 @@ public class SendToggleAndListen extends SendAndListen{
 
     @Override
     public boolean handleResponseMessage(DatagramPacket receivedPacket) {
-        D2AStatusMessage response = DeviceListManager.MessageUtils.parseStatusPacket(receivedPacket, TOGGLE_MSG_TYPE);
+        D2AStatusMessage response = MessageUtils.parseStatusPacket(receivedPacket, TOGGLE_MSG_TYPE);
         this.currentActivity.runOnUiThread(() -> {
             if (response != null) {
                 this.device.setPowerState(response.relayOn);

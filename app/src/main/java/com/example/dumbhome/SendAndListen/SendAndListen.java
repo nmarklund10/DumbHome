@@ -59,6 +59,7 @@ public abstract class SendAndListen implements Runnable {
                 try {
                     DeviceListManager.getInstance().setListening(listenForResponse());
                 } catch (SocketTimeoutException e) {
+                    DeviceListManager.getInstance().setListening(false);
                     this.currentActivity.runOnUiThread(this::handleTimeout);
                 }
             }

@@ -3,8 +3,9 @@ package com.example.dumbhome.SendAndListen;
 import android.widget.TextView;
 
 import com.example.dumbhome.Device;
-import com.example.dumbhome.DeviceListManager;
 import com.example.dumbhome.EditDeviceDialog;
+import com.example.dumbhome.MessageUtils;
+
 import dh_java.A2DNameMessage;
 import dh_java.D2AStatusMessage;
 
@@ -26,7 +27,7 @@ public class SendNameAndListen extends SendAndListen {
 
     @Override
     public boolean handleResponseMessage(DatagramPacket receivedPacket) {
-        D2AStatusMessage response = DeviceListManager.MessageUtils.parseStatusPacket(receivedPacket, NAME_MSG_TYPE);
+        D2AStatusMessage response = MessageUtils.parseStatusPacket(receivedPacket, NAME_MSG_TYPE);
         this.currentActivity.runOnUiThread(() -> {
             if (response != null) {
                 TextView deviceNameView = this.editDeviceDialog.getDeviceNameView();

@@ -2,12 +2,15 @@ package com.example.dumbhome.SendAndListen;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 import com.example.dumbhome.Device;
 import com.example.dumbhome.DeviceListManager;
 import com.example.dumbhome.LoadingActivity;
 import com.example.dumbhome.MainActivity;
 import dh_java.A2DDiscoverMessage;
+import dh_java.A2DNameMessage;
+import dh_java.A2DToggleMessage;
 import dh_java.D2AIdentityMessage;
 
 import java.net.DatagramPacket;
@@ -33,6 +36,7 @@ public class SendDiscoverAndListen extends SendAndListen {
 
     @Override
     protected boolean handleResponseMessage(DatagramPacket receivedPacket) {
+        Log.d("DEBUG", "Received Identity message");
         D2AIdentityMessage response = D2AIdentityMessage.fromBytes(receivedPacket.getData());
         if (response != null) {
             InetAddress ipAddress = receivedPacket.getAddress();
